@@ -9,6 +9,6 @@ public class ApiDbContext : DbContext
 
     override protected void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer(@"(localdb)\MSSQLLocalDB;Database=VehicleApiDb;");
+        optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=VehicleApiDb;");
     }
 }
