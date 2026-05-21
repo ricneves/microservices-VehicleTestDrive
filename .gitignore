@@ -22,6 +22,12 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+
+# Visual Studio user-specific files
+*.csproj.user
+*.vbproj.user
+*.suo
+*.user
 .vs/
 
 # .NET Core
