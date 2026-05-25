@@ -19,5 +19,5 @@ public class Reservation
 
     public Vehicle Vehicle { get; set; }
 
-    public bool isMailSent { get; set; }
+    public bool IsMailSent { get; set; }
 }
