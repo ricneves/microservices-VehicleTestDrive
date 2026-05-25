@@ -4,6 +4,7 @@ using CustomersApi.Data;
 using CustomersApi.Interfaces;
 using CustomersApi.Models;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace CustomersApi.Services;
 
@@ -38,15 +39,14 @@ public class CustomerService : ICustomer
             string connectionString = "";
             string queueName = "azureorderqueue";
 
-            // since ServiceBusClient implements IAsyncDisposable we create it with "await using"
+            string customerJson = JsonConvert.SerializeObject(customer);
+
             await using ServiceBusClient client = new(connectionString);
-            // create the sender
+
             ServiceBusSender sender = client.CreateSender(queueName);
 
-            // create a message that we can send. UTF-8 encoding is used when providing a string.
-            ServiceBusMessage message = new("Hello world!");
+            ServiceBusMessage message = new(customerJson);
 
-            // send the message
             await sender.SendMessageAsync(message);
         }
         catch (Exception)
