@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Azure.Messaging.ServiceBus;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using ReservationsApi.Data;
 using ReservationsApi.Interfaces;
 using ReservationsApi.Models;
@@ -16,7 +18,29 @@ public class ReservationService : IReservation
     }
     public async Task<List<Reservation>> GetReservations()
     {
-        // TODO: later
+        string connectionString = "";
+        string queueName = "azureorderqueue";
+
+        await using ServiceBusClient client = new(connectionString);
+
+        ServiceBusReceiver receiver = client.CreateReceiver(queueName);
+
+        IReadOnlyList<ServiceBusReceivedMessage> receivedMessages = await receiver.ReceiveMessagesAsync(10);
+
+        if (receivedMessages == null)
+            return null;
+
+        foreach (ServiceBusReceivedMessage receivedMessage in receivedMessages)
+        {
+            string body = receivedMessage.Body.ToString();
+            var messageCreated = JsonConvert.DeserializeObject<Reservation>(body);
+
+            await dbContext.Reservations.AddAsync(messageCreated);
+            await dbContext.SaveChangesAsync();
+
+            await receiver.CompleteMessageAsync(receivedMessage);
+        }
+
         return await dbContext.Reservations.ToListAsync();
     }
 
