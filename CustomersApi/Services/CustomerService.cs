@@ -1,5 +1,4 @@
-﻿using Azure.Identity;
-using Azure.Messaging.ServiceBus;
+﻿using Azure.Messaging.ServiceBus;
 using CustomersApi.Data;
 using CustomersApi.Interfaces;
 using CustomersApi.Models;
@@ -39,11 +38,11 @@ public class CustomerService : ICustomer
             string connectionString = "";
             string queueName = "azureorderqueue";
 
-            string customerJson = JsonConvert.SerializeObject(customer);
-
             await using ServiceBusClient client = new(connectionString);
 
             ServiceBusSender sender = client.CreateSender(queueName);
+
+            string customerJson = JsonConvert.SerializeObject(customer);
 
             ServiceBusMessage message = new(customerJson);
 

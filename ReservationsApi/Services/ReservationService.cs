@@ -46,19 +46,26 @@ public class ReservationService : IReservation
 
     public async Task UpdateMailStatus(int id)
     {
-        var reservation = await dbContext.Reservations.FindAsync(id);
-        if (reservation != null && !reservation.IsMailSent)
+        try
         {
-            string smtpEmail = "email@outlook.com";
-            var smtpClient = new SmtpClient("smtp.live.com")
+            var reservation = await dbContext.Reservations.FindAsync(id);
+            if (reservation != null && !reservation.IsMailSent)
             {
-                Port = 587,
-                Credentials = new NetworkCredential(smtpEmail, "password"),
-                EnableSsl = true
-            };
-            smtpClient.Send(smtpEmail, reservation.Email, "Vehicle test drive", "Your test drive is reserved");
-            reservation.IsMailSent = true;
-            await dbContext.SaveChangesAsync();
+                string smtpEmail = "email@outlook.com";
+                var smtpClient = new SmtpClient("smtp.live.com")
+                {
+                    Port = 587,
+                    Credentials = new NetworkCredential(smtpEmail, "password"),
+                    EnableSsl = true
+                };
+                smtpClient.Send(smtpEmail, reservation.Email, "Vehicle test drive", "Your test drive is reserved");
+                reservation.IsMailSent = true;
+                await dbContext.SaveChangesAsync();
+            }
+        }
+        catch (Exception)
+        {
+            throw;
         }
     }
 }
