@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="ApiGateway/ApiGateway.csproj" Id="aaa528f6-3b81-41d2-964b-e509083dc651" />
   <Project Path="CustomersApi/CustomersApi.csproj" />
   <Project Path="ReservationsApi/ReservationsApi.csproj" />
   <Project Path="VehicleApi/VehicleApi.csproj" />
